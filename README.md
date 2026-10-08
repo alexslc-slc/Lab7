@@ -15,6 +15,7 @@ El frontend React/Vite y la API Express están integrados en esta carpeta. Seque
 3. Desde esta carpeta, instala dependencias con `pnpm install`.
 
 El servidor crea las tablas y los roles `user`, `admin` y `moderator` al iniciar, sin borrar los datos existentes.
+El formulario permite elegir el tipo de usuario. Para evitar que cualquiera se registre con permisos elevados, configura `MODERATOR_REGISTRATION_CODE` y `ADMIN_REGISTRATION_CODE` en el entorno del servicio; esos tipos requieren su código correspondiente. El rol `user` no requiere código.
 
 ## Desarrollo
 

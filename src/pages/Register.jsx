@@ -8,6 +8,8 @@ export default function Register() {
     email: "",
     password: "",
     confirmPassword: "",
+    role: "user",
+    roleCode: "",
   });
 
   const [error, setError] = useState("");
@@ -51,7 +53,9 @@ export default function Register() {
       await register(
         formData.username,
         formData.email,
-        formData.password
+        formData.password,
+        formData.role,
+        formData.roleCode
       );
       
       setSuccess("¡Usuario registrado con éxito! Redirigiendo al login...");
@@ -150,6 +154,49 @@ export default function Register() {
             }
           />
         </div>
+
+        <div className="mb-4">
+          <label
+            htmlFor="role"
+            className="block text-sm font-medium mb-1 text-slate-700"
+          >
+            Tipo de usuario
+          </label>
+          <select
+            id="role"
+            className="w-full border border-slate-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+            value={formData.role}
+            onChange={(e) =>
+              setFormData({ ...formData, role: e.target.value, roleCode: "" })
+            }
+          >
+            <option value="user">Usuario</option>
+            <option value="moderator">Moderador</option>
+            <option value="admin">Administrador</option>
+          </select>
+        </div>
+
+        {formData.role !== "user" && (
+          <div className="mb-6">
+            <label
+              htmlFor="roleCode"
+              className="block text-sm font-medium mb-1 text-slate-700"
+            >
+              Código de autorización
+            </label>
+            <input
+              id="roleCode"
+              type="password"
+              required
+              autoComplete="off"
+              className="w-full border border-slate-300 rounded-lg px-3 py-2 outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition"
+              value={formData.roleCode}
+              onChange={(e) =>
+                setFormData({ ...formData, roleCode: e.target.value })
+              }
+            />
+          </div>
+        )}
 
         {/* Submit */}
         <button

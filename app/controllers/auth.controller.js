@@ -17,13 +17,24 @@ const { user: User, role: Role } = db;
 export const signup = async (req, res) => {
   try {
     // Extrae los datos enviados en el cuerpo de la solicitud
-    const { username, email, password } = req.body;
+    const { username, email, password, role: roleName, roleCode } = req.body;
+
+    if (roleName !== "user") {
+      const requiredCode = process.env[`${roleName.toUpperCase()}_REGISTRATION_CODE`];
+      if (!requiredCode || roleCode !== requiredCode) {
+        return res.status(403).json({
+          message: `Se requiere un código de autorización válido para registrarse como ${roleName}.`,
+        });
+      }
+    }
 
     // Encripta la contraseña antes de guardarla en la base de datos
     const hashedPassword = await bcrypt.hash(password, 8);
 
-    // Busca el rol "user" en la base de datos para asignarlo por defecto
-    const userRole = await Role.findOne({ where: { name: "user" } });
+    const role = await Role.findOne({ where: { name: roleName } });
+    if (!role) {
+      return res.status(500).json({ message: `El rol ${roleName} no está inicializado.` });
+    }
 
     // Crea un nuevo usuario con los datos proporcionados y la contraseña encriptada
     const user = await User.create({
@@ -33,7 +44,7 @@ export const signup = async (req, res) => {
     });
 
     // Asocia el rol encontrado al usuario (relación muchos a muchos)
-    await user.setRoles([userRole]);
+    await user.setRoles([role]);
 
     // Devuelve respuesta exitosa
     res.status(201).json({ message: "User registered successfully!" });
