@@ -8,8 +8,8 @@ export const login = async (username, password) => {
   return response.data;
 };
 
-export const register = async (username, email, password, role, roleCode) => {
-  return API.post("/auth/signup", { username, email, password, role, roleCode });
+export const register = async (username, email, password, role) => {
+  return API.post("/auth/signup", { username, email, password, role });
 };
 
 export const logout = () => {

@@ -17,16 +17,7 @@ const { user: User, role: Role } = db;
 export const signup = async (req, res) => {
   try {
     // Extrae los datos enviados en el cuerpo de la solicitud
-    const { username, email, password, role: roleName, roleCode } = req.body;
-
-    if (roleName !== "user") {
-      const requiredCode = process.env[`${roleName.toUpperCase()}_REGISTRATION_CODE`];
-      if (!requiredCode || roleCode !== requiredCode) {
-        return res.status(403).json({
-          message: `Se requiere un código de autorización válido para registrarse como ${roleName}.`,
-        });
-      }
-    }
+    const { username, email, password, role: roleName } = req.body;
 
     // Encripta la contraseña antes de guardarla en la base de datos
     const hashedPassword = await bcrypt.hash(password, 8);
